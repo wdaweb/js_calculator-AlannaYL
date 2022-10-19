@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url(./GrandCanyon.png);
+        }
+
+        table {
+            font-family: 'Roboto Mono', monospace;
+            position: relative;
+            top: calc(50vh - 250px);
+            left: calc(90vh - 100px);
+            width: 400px;
+            height: 500px;
+            text-align: center;
+            border-spacing: 3px;
+            vertical-align: center;
+            border-radius: 10px;
+            background: rgba(255, 209, 148, 0.5);
+        }
+
+        #text {
+            text-align: right;
+            padding: 0 20px 0 0;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .tilt-in-fwd-tr {
+            -webkit-animation: tilt-in-fwd-tr 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            animation: tilt-in-fwd-tr 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+
+        @-webkit-keyframes tilt-in-fwd-tr {
+            0% {
+                -webkit-transform: rotateY(20deg) rotateX(35deg) translate(300px, -300px) skew(-35deg, 10deg);
+                transform: rotateY(20deg) rotateX(35deg) translate(300px, -300px) skew(-35deg, 10deg);
+                opacity: 0;
+            }
+
+            100% {
+                -webkit-transform: rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg);
+                transform: rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes tilt-in-fwd-tr {
+            0% {
+                -webkit-transform: rotateY(20deg) rotateX(35deg) translate(300px, -300px) skew(-35deg, 10deg);
+                transform: rotateY(20deg) rotateX(35deg) translate(300px, -300px) skew(-35deg, 10deg);
+                opacity: 0;
+            }
+
+            100% {
+                -webkit-transform: rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg);
+                transform: rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg);
+                opacity: 1;
+            }
+        }
+
+
+        tr td:not(#text) {
+            width: 70px;
+            height: 70px;
+            background-image: linear-gradient(45deg, transparent, #FFC371);
+            border-radius: 20px;
+            color: white;
+        }
+
+        tr td:not(#text):hover {
+            background: rgba(255, 75, 80);
+            box-shadow: 0 0 10px rgba(255, 75, 80, 0.5),
+                0 0 15px rgba(255, 75, 80, 0.4),
+                0 0 20px rgba(255, 75, 80, 0.2);
+        }
+
+        .active {
+            background-color: rgb(255, 75, 80);
+        }
+    </style>
+</head>
+
+<body>
+
+    <table class="tilt-in-fwd-tr">
+        <tr>
+            <td colspan="4" id="text">0</td>
+        </tr>
+        <tr>
+            <td id="tdc">C</td>
+            <td id="td/">/</td>
+            <td id="td*">*</td>
+            <td id="td-">-</td>
+        </tr>
+        <tr>
+            <td id="td7">7</td>
+            <td id="td8">8</td>
+            <td id="td9">9</td>
+            <td rowspan="2" id="td+">+</td>
+        </tr>
+        <tr>
+            <td id="td4">4</td>
+            <td id="td5">5</td>
+            <td id="td6">6</td>
+        </tr>
+        <tr>
+            <td id="td1">1</td>
+            <td id="td2">2</td>
+            <td id="td3">3</td>
+            <td rowspan="2" id="tdEnter">Enter</td>
+        </tr>
+        <tr>
+            <td colspan="2" id="td0">0</td>
+            <td id="td.">.</td>
+        </tr>
+    </table>
+    <script>
+        const text = document.getElementById('text')
+        const btns = document.querySelectorAll('td:not(#text)')
+        let reset = false
+
+        for (const btn of btns) {
+            btn.onclick = () => {
+                const btnText = btn.innerText
+                if (btnText === 'Enter') {
+                    text.innerText = eval(text.innerText)
+                    reset = true
+                } else if (btnText === 'C' || btnText === 'c') {
+                    text.innerText = '0'
+                } else {
+                    if (text.innerText === '-' && isNaN(parseInt(btnText))) return
+                    // !reset => 判斷現在的reset === false 
+                    if (text.innerText !== '0' && !reset) {
+                        text.innerText += btnText
+                    } else if (!['+', '*', '/'].includes(btnText) || reset) {
+                        text.innerText = btnText
+                        reset = false
+                    }
+                }
+            }
+        }
+
+        document.onkeydown = event => {
+            const btnText = event.key
+            document.getElementById('td' + btnText).classList.add('active')
+            if (btnText === 'Enter' || btnText === '=') {
+                text.innerText = eval(text.innerText)
+                reset = true
+            } else if (btnText === 'C' || btnText === 'c') {
+                text.innerText = '0'
+            } else {
+                if (text.innerText === '-' && isNaN(parseInt(btnText))) return
+                if (!['+', '*', '/', '-'].includes(btnText) && !btnText.match(/[0-9.]/g)) return
+                if (text.innerText !== '0' && !reset) {
+                    text.innerText += btnText
+                    btns.style.backgroundColor = `rgb${color.join(",")}`
+
+                } else if (!['+', '*', '/'].includes(btnText) || reset) {
+                    text.innerText = btnText
+                    reset = false
+
+                }
+            }
+        }
+
+        document.onkeyup = event => {
+            const btnText = event.key
+            document.getElementById('td' + btnText).classList.remove('active')
+        }
+
+    </script>
+</body>
+
+</html>
